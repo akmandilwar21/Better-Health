@@ -63,17 +63,51 @@ class MiddleComponent extends React.Component {
             let{england,scotland,ireland}=this.state;
             const today = new Date();
             const currDate=today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate());
-            const lastMonth = today.getFullYear()+'-'+today.getMonth()+'-'+(today.getDate());
-            let resultEngland=england.filter(function(obj){
-                 return obj.date >= lastMonth && obj.date<= currDate;
-            })
-            let resultScotland=scotland.filter(function(obj){
-                 return obj.date >= lastMonth && obj.date<= currDate;
-            })
-            let resultIreland=ireland.filter(function(obj){
-                 return obj.date >= lastMonth && obj.date<= currDate;
-            })
-            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false,startDate:"",startingDate:"",endDate:"",endingDate:""});
+            if(today.getMonth()===0) {
+                var lastMonthstart=(today.getFullYear()-1)+'-'+12+'-'+(today.getDate());
+                 var lastMonthend=(today.getFullYear()-1)+'-'+12+'-'+31;
+                var currMonthstart=today.getFullYear()+'-'+"01"+'-'+"01";
+                var currMonthend=today.getFullYear()+'-'+"01"+'-'+(today.getDate());
+                let resultEngland1=england.filter(function(obj){
+                    return obj.date >= lastMonthstart && obj.date<= lastMonthend;
+                })
+                let resultEngland2=england.filter(function(obj){
+                    return obj.date >= currMonthstart && obj.date<= currMonthend;
+                })
+                 let resultScotland1=scotland.filter(function(obj){
+                    return obj.date >= lastMonthstart && obj.date<= lastMonthend;
+                })
+                let resultScotland2=scotland.filter(function(obj){
+                    return obj.date >= currMonthstart && obj.date<= currMonthend;
+                })
+                 let resultIreland1=ireland.filter(function(obj){
+                    return obj.date >= lastMonthstart && obj.date<= lastMonthend;
+                })
+                let resultIreland2=ireland.filter(function(obj){
+                    return obj.date >= currMonthstart && obj.date<= currMonthend;
+                })
+                let finalresultEngland=[...resultEngland1,...resultEngland2];
+                let finalresultScotland=[...resultScotland1,...resultScotland2];
+                let finalresultIreland=[...resultIreland1,...resultIreland2];
+                
+               this.setState({filteredListEngland:finalresultEngland,filteredListScotland:finalresultScotland,filteredListIreland:finalresultIreland,showList:true,showTextField:false,startDate:"",startingDate:"",endDate:"",endingDate:""});
+
+            }
+            else{
+               var lastMonth = today.getFullYear()+'-'+today.getMonth()+'-'+(today.getDate());
+            
+                let resultEngland=england.filter(function(obj){
+                    return obj.date >= lastMonth && obj.date<= currDate;
+                })
+                let resultScotland=scotland.filter(function(obj){
+                    return obj.date >= lastMonth && obj.date<= currDate;
+                })
+                let resultIreland=ireland.filter(function(obj){
+                    return obj.date >= lastMonth && obj.date<= currDate;
+                })
+                this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false,startDate:"",startingDate:"",endDate:"",endingDate:""});    
+            }
+            
            }
            if(e.target.value==="") this.setState({filterOption:e.target.value,showList:false,showTextField:false})
 
