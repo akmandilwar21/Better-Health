@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import './styles.css';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import AllDivision from './AllDivision';
 class MiddleComponent extends React.Component {
     state={
@@ -14,6 +16,8 @@ class MiddleComponent extends React.Component {
         selectedDivision:"",
         startingDate:"",
         endingDate:"",
+        startDate:"",
+        endDate:"",
         filteredListEngland:[],
         filteredListScotland:[],
         filteredListIreland:[]
@@ -37,7 +41,7 @@ class MiddleComponent extends React.Component {
             let resultIreland=ireland.filter(function(obj){
                 return obj.date ==yesterday;
             })
-            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false});
+            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false,startDate:"",startingDate:"",endDate:"",endingDate:""});
            }
            if(e.target.value==="lastWeek"){
             let{england,scotland,ireland}=this.state;
@@ -53,7 +57,7 @@ class MiddleComponent extends React.Component {
             let resultIreland=ireland.filter(function(obj){
                  return obj.date >= lastweek && obj.date<= currDate;
             })
-            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false});
+            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false,startDate:"",startingDate:"",endDate:"",endingDate:""});
            }
            if(e.target.value==="lastMonth"){
             let{england,scotland,ireland}=this.state;
@@ -69,32 +73,48 @@ class MiddleComponent extends React.Component {
             let resultIreland=ireland.filter(function(obj){
                  return obj.date >= lastMonth && obj.date<= currDate;
             })
-            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false});
+            this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,showTextField:false,startDate:"",startingDate:"",endDate:"",endingDate:""});
            }
            if(e.target.value==="") this.setState({filterOption:e.target.value,showList:false,showTextField:false})
 
      }
-     handleStartingDate=(e)=>{
-         this.setState({startingDate:e.target.value});
+     handleStartingDate=(date)=>{
+       
+        let currDate=date.getDate();
+        if(currDate<10) currDate="0"+currDate;
+        let month=date.getMonth()+1;
+        if(month<10) month="0"+month;
+        let year=date.getFullYear();
+        let x=year+"-"+month+"-"+currDate;
+        console.log(x);
+         this.setState({startingDate:date,startDate:x});
      }
-     handleEndingDate=(e)=>{
-         this.setState({endingDate:e.target.value});
+     handleEndingDate=(date)=>{
+        let currDate=date.getDate();
+        if(currDate<10) currDate="0"+currDate;
+        let month=date.getMonth()+1;
+        if(month<10) month="0"+month;
+        let year=date.getFullYear();
+        let x=year+"-"+month+"-"+currDate;
+         this.setState({endingDate:date,endDate:x});
      }
      handleSubmit=()=>{
-         let {startingDate,endingDate,england,scotland,ireland}=this.state;
+         let {startDate,endDate,england,scotland,ireland}=this.state;
         let resultEngland=england.filter(function(obj){
-            return obj.date >= startingDate && obj.date<= endingDate;
+            return obj.date >= startDate && obj.date<= endDate;
         })
         let resultScotland=scotland.filter(function(obj){
-            return obj.date >= startingDate && obj.date<= endingDate;
+            return obj.date >= startDate && obj.date<= endDate;
         })
         let resultIreland=ireland.filter(function(obj){
-            return obj.date >= startingDate && obj.date<= endingDate;
+            return obj.date >= startDate && obj.date<= endDate;
         })
         this.setState({filteredListEngland:resultEngland,filteredListScotland:resultScotland,filteredListIreland:resultIreland,showList:true,});
      }
+
     render() { 
         let {england,scotland,ireland,filterOption,startingDate,endingDate,filteredListEngland,filteredListScotland,filteredListIreland,showList,selectedDivision,showTextField}=this.state;
+        console.log('startingDate:- ',startingDate+ 'endingDate:- ',endingDate);
         return(
         <div className="container"> 
             <div style={{    display:"grid",gridTemplateColumns: "3% 15% 37%"}}>
@@ -110,8 +130,8 @@ class MiddleComponent extends React.Component {
                 </div>
                 <div>{showTextField ?
                     <div className="range">
-                        <input type="text" placeholder='Enter the starting date' onChange={this.handleStartingDate} value={startingDate}/>
-                        <input type="text" placeholder='Enter the ending date' onChange={this.handleEndingDate} value={endingDate}/>
+                        <DatePicker dateFormat="yyyy-MM-dd" selected={startingDate} onChange={(date) => this.handleStartingDate(date)}  />
+                        <DatePicker dateFormat="yyyy-MM-dd" selected={endingDate} onChange={(date) => this.handleEndingDate(date)} />
                         <button className='btn-submit' onClick={this.handleSubmit}>Submit</button>
                     </div>
                 :""}</div>

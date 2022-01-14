@@ -34,7 +34,7 @@ select{
 }
 .range{
     display: grid;
-    grid-template-columns: 40% 40% 20%;
+    grid-template-columns: auto auto auto auto;
 }
 .range input{
     margin-top: 0;
